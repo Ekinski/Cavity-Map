@@ -1,0 +1,67 @@
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.Collections;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
+using System.Text;
+using System;
+
+class Solution {
+
+    // Complete the cavityMap function below.
+    static string[] cavityMap(string[] grid) {
+        string str = grid[0];
+        string[] answer =  new string [grid.Length];
+        char[] chars = str.ToCharArray();
+        answer[0] = new string (chars); // save first chars
+        for (int a = 1; a < grid.Length -1; a++){
+            str = grid[a];
+            chars = str.ToCharArray();
+            string strTop = grid[a-1];
+            char[] charsTop = strTop.ToCharArray(); // register top chars
+            string strBottom = grid[a +1];
+            char[] charsBottom = strBottom.ToCharArray(); // register bottom chars
+
+            for ( int b = 0; b < chars.Length; b++){
+                if (b < chars.Length -1 && b > 0){
+                    if (chars[b]> chars[b-1] && chars [b] > chars[b+1] && chars [b] > charsBottom[b] && chars [b] > charsTop[b]){ // check left, right, bottom and top numbers.
+                        chars[b] = 'X';
+                    } else {
+                        continue;
+                    }
+                }
+            }
+            answer[a] = new string (chars);
+        }
+        str = grid[grid.Length -1];
+        chars = str.ToCharArray();
+        answer[grid.Length -1] = new string (chars); // save last chars
+        return answer;
+    }
+
+    static void Main(string[] args) {
+        TextWriter textWriter = new StreamWriter(@System.Environment.GetEnvironmentVariable("OUTPUT_PATH"), true);
+
+        int n = Convert.ToInt32(Console.ReadLine());
+
+        string[] grid = new string [n];
+
+        for (int i = 0; i < n; i++) {
+            string gridItem = Console.ReadLine();
+            grid[i] = gridItem;
+        }
+
+        string[] result = cavityMap(grid);
+
+        textWriter.WriteLine(string.Join("\n", result));
+
+        textWriter.Flush();
+        textWriter.Close();
+    }
+}
